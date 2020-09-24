@@ -1,2 +1,2 @@
 # Bank
-Creating a Bank Application with Python and a MySQL database
+Bank Application using Python and MySQL database
