@@ -121,27 +121,6 @@ def select_option(db, code):
         printString("Invalid code - Please try again", length=DEFAULT_PAGE_WIDTH)
 
 
-
-def getAccountInfo(db, acc_no, balanceOnly=False, v=0):
-    try:
-        selectRowByAccNbr(db, acc_no)
-    except Exception as e:
-        printString("Database Error", length=DEFAULT_PAGE_WIDTH)
-        logging.error(e)
-        raise Exception()
-    else:
-        row = db.getCursor().fetchone()
-        if row is None:
-            logging.error(f"The account, with id = {acc_no}, does not exist")
-            raise Exception("Account does not exist")
-        # row[1] = name
-        # row[2] = balance
-        # row[3] = open date
-        if v:
-            print(f"Name:         {row[1]}\n"
-                + f"Balance:      {row[2]}\n"
-                + f"Opening Date: {row[3]}\n")
-        return row[2] if balanceOnly else row[1], row[2], row[3]
     
 def addAccount(db, name, balance):
     db.getCursor().execute("INSERT INTO accounts (name, balance) VALUES (%s, %s);", (name, int(balance)))
@@ -166,6 +145,29 @@ def saveTransaction(db):
 def rollbackTransaction(db):
     db.rollback()
 
+def getAccountInfo(db, acc_no, balanceOnly=False, v=0):
+    try:
+        selectRowByAccNbr(db, acc_no)
+    except Exception as e:
+        printString("Database Error", length=DEFAULT_PAGE_WIDTH)
+        logging.error(e)
+        raise Exception()
+    else:
+        row = db.getCursor().fetchone()
+        if row is None:
+            logging.error(f"The account, with id = {acc_no}, does not exist")
+            raise Exception("Account does not exist")
+        # row[1] = name
+        # row[2] = balance
+        # row[3] = open date
+        if v:
+            print(f"Name:         {row[1]}\n"
+                + f"Balance:      {row[2]}\n"
+                + f"Opening Date: {row[3]}\n")
+            
+        logging.debug(f"Fetching account {acc_no} was successful")
+        
+        return row[2] if balanceOnly else row[1], row[2], row[3]
 
 ########## Main functions of the Bank: Create Account, Check Balance, Deposit, Withdraw, Transfer ##########
 
@@ -188,10 +190,12 @@ def createAccount(db, name=DEFAULT_ACCOUNT_NAME, balance=DEFAULT_BALANCE, v=VERB
         printString("Account successfully created", length=DEFAULT_PAGE_WIDTH)
         
         printStatus(STATUS_COMP, DEBUG)
+        
+        logging.debug(f"Account creation for '{name}' was successful")
         return True
     except Exception as e:
-        print(e)
         rollbackTransaction(db)
+        logging.error(e)
     
     printString("Account creation unsuccessful", length=DEFAULT_PAGE_WIDTH)
     printStatus(STATUS_ERROR, DEBUG)
@@ -201,8 +205,6 @@ def createAccount(db, name=DEFAULT_ACCOUNT_NAME, balance=DEFAULT_BALANCE, v=VERB
 ## Check balance
 def checkBalance(db, acc_no, v=VERBOSE_MAIN_FUNCTIONS):
 
-    ##  Run display account information and validate acc_no
-    # print status
     printStatus(STATUS_LOAD, DEBUG)
     
     if v: 
@@ -213,11 +215,16 @@ def checkBalance(db, acc_no, v=VERBOSE_MAIN_FUNCTIONS):
     try:
         getAccountInfo(db, acc_no, v=1)
         printStatus(STATUS_COMP, DEBUG)
+        
+        logging.debug(f"Checking balance (Account Id: {acc_no}) was successful")
+        
         return True
     except Exception as e:
-        print(e)
-        printString("Check Balance unsuccessful", length=DEFAULT_PAGE_WIDTH)
-        printStatus(STATUS_ERROR, DEBUG)
+        logging.error(e)
+        
+    printString("Check Balance unsuccessful", length=DEFAULT_PAGE_WIDTH)
+    printStatus(STATUS_ERROR, DEBUG)
+    
     return False
 
 # Deposit Main
@@ -248,10 +255,12 @@ def deposit(db, acc_no, deposit_amount, v=VERBOSE_MAIN_FUNCTIONS):
             printString(str(balance), prefix="\nNew Balance: ", length=0)
             printStatus(STATUS_COMP, DEBUG)
             
+            logging.debug(f"Deposit (Account Id: {acc_no}) was successful")
+            
             return True
         except Exception as e:
-            print(e)
             rollbackTransaction(db)
+            logging.error(e)
         
     printString("Deposit unsuccessful", length=DEFAULT_PAGE_WIDTH)
     printStatus(STATUS_ERROR, DEBUG)
@@ -290,11 +299,13 @@ def withdraw(db, acc_no, withdraw_amount, v=VERBOSE_MAIN_FUNCTIONS):
             
             printString(str(balance), prefix="\nNew Balance: ", length=0)
             printStatus(STATUS_COMP, DEBUG)
+            
+            logging.debug(f"Withdraw (Account Id: {acc_no}) was successful")
                 
             return True
         except Exception as e:
-            print(e)
             rollbackTransaction(db)
+            logging.error(e)
     
     printString("Withdraw Unsuccessful", prefix="\n", suffix="\n", length=DEFAULT_PAGE_WIDTH)
     printStatus(STATUS_ERROR, DEBUG)
@@ -329,10 +340,12 @@ def transfer(db, src_acc_no, trgt_acc_no, transfer_amount, v=VERBOSE_MAIN_FUNCTI
             printString(str(trgt_balance), prefix=f"\n{trgt_name}Target's New Balance: ", length=0)
             printStatus(STATUS_COMP, DEBUG)
             
+            logging.debug(f"Transfer from (Account Id: {src_acc_no}) to (Account Id: {trgt_acc_no}) was successful")
+            
             return True
         except Exception as e:
-            print(e)
             rollbackTransaction(db)
+            logging.error(e)
             if switch == 0: printString("Source Account error", length=DEFAULT_PAGE_WIDTH)
             elif switch == 1: printString("Target Account error", length=DEFAULT_PAGE_WIDTH)
     
@@ -351,11 +364,11 @@ if __name__ == "__main__":
     
     if db.getConnection():
         cursor = db.getNewCursor()
-        
-        while (CODE):
-            display_options()
-            CODE = getInput(prefix="Enter a code")
-            select_option(db, CODE)
+        if cursor:
+            while (CODE):
+                display_options()
+                CODE = getInput(prefix="Enter a code")
+                select_option(db, CODE)
     
     printString("Connection has end", length=DEFAULT_PAGE_WIDTH)
     printStatus(STATUS_EXIT, DEBUG)

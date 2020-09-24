@@ -57,4 +57,4 @@ class mysqlDB():
         except connector.Error:
             logging.debug(f'Connection to Database: {self.database} was unsuccessful')
             self.connection = self.connectDB()
-        return self.connection.cursor(buffered=True)
+        return self.connection.cursor(buffered=True) if self.connection else False
