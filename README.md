@@ -11,7 +11,7 @@ database = ...<br/>
 
 ## MySQL database schema
 CREATE TABLE `accounts` (<br/>
-  `account_no` int NOT NULL AUTO_INCREMENT,<br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`account_no` int NOT NULL AUTO_INCREMENT,<br/>
   `name` varchar(15) NOT NULL,<br/>
   `balance` int NOT NULL,<br/>
   `open_date` datetime DEFAULT CURRENT_TIMESTAMP,<br/>
