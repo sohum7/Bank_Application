@@ -2,14 +2,12 @@
 Bank Application using Python and MySQL database
 
 ## Config
-A config.ini file is required in the following format
-'''
-[MYSQL]
-host = ...
-username = ...
-password = ...
-database = ...
-'''
+A config.ini file is required in the following format:<br/>
+[MYSQL]<br/>
+host = ...<br/>
+username = ...<br/>
+password = ...<br/>
+database = ...<br/>
 
 ## MySQL database schema
 CREATE TABLE `accounts` (
