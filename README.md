@@ -2,12 +2,12 @@
 Bank Application using Python and MySQLconnector API to connect to a MySQL database and manage persistent data
 
 ## Config
-A config.ini file is required in the following format:<br/><br/>
-[MYSQL]<br/>
-host = ...<br/>
-username = ...<br/>
-password = ...<br/>
-database = ...<br/>
+A *config.ini* file is required and must contain login credentials in the following format:<br/><br/>
+  [MYSQL]<br/>
+  host = ...<br/>
+  username = ...<br/>
+  password = ...<br/>
+  database = ...<br/>
 
 ## MySQL database schema
 CREATE TABLE `accounts` (<br/>
