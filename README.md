@@ -11,7 +11,7 @@ A *config.ini* file is required and must contain login credentials in the follow
 
 ## MySQL database schema
 CREATE TABLE `accounts` (<br/>
-    account_no` int NOT NULL AUTO_INCREMENT,<br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`account_no` int NOT NULL AUTO_INCREMENT,<br/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`name` varchar(15) NOT NULL,<br/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`balance` int NOT NULL,<br/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`open_date` datetime DEFAULT CURRENT_TIMESTAMP,<br/>
