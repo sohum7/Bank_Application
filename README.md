@@ -1,5 +1,5 @@
 # Bank
-Bank Application using Python and MySQL database
+Bank Application using Python and MySQLconnector API to connect to a MySQL database and manage persistent data
 
 ## Config
 A config.ini file is required in the following format:<br/><br/>
