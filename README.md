@@ -1,5 +1,5 @@
 # Bank
-Bank application using Python and MySQLconnector API to communicate with a MySQL database. This will allow the Bank to manage persistent data and is ACID compliant
+A Bank application designed using Python and a custom MySQLconnector API to communicate with a MySQL database. This will allow the Bank to manage persistent data and is ACID compliant.
 
 ## Config
 A *config.ini* file is required and must contain login credentials in the following format:<br/><br/>
